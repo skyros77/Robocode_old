@@ -5,77 +5,72 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import mo.Utils.*;
+
 public class EnemyData {
 
 	// VARIABLES
 	private BotData myBot;
-	private String eName;
-	private double eAbsBearing;
-	private double eBearing;
-	private double eDistance;
-	private double eVelocity;
-	private Point2D.Double ePos;
-	private LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(5, 2, true);
+	private String name;
+	private double absBearing;
+	private double bearing;
+	private double distance;
+	private double velocity;
+	private Point2D.Double pos;
+	private LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(5, 2, true);
 
 	// CONSTRUCTORS
 	public EnemyData(BotData robot) {
 		this.myBot = robot;
 	}
-	
-	// ACCESSORS
-	public String getName() {
-		return this.eName;
-	}
-
-	public double getAbsBearing() {
-		return this.eAbsBearing;
-	}
-
-	public double getBearing() {
-		return this.eBearing;
-	}
-
-	public double getDistance() {
-		return this.eDistance;
-	}
-	
-	public double getVelocity() {
-		return this.eVelocity;
-	}
-
-	public Point2D.Double getPos() {
-		return this.ePos;
-	}
-
-	public LinkedHashMap<String, HashMap<String, Object>> getMap() {
-		return this.eMap;
-	}
 
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		/*		
-		eName = e.getName();
-		eDistance = e.getDistance();
-		eVelocity = e.getVelocity();
-		eBearing = e.getBearingRadians();
-		eAbsBearing = myBot.getHeadingRadians() + e.getBearingRadians();	
+		name		= e.getName();
+		distance	= e.getDistance();
+		velocity	= e.getVelocity();
+		bearing		= e.getBearingRadians();
+		absBearing	= myBot.getHeadingRadians() + e.getBearingRadians();	
+		pos			= BotUtils.getPos(myBot.getPos(), absBearing, distance);
 		
-		ePos = utils.getPos(myBot.getPos(), eAbsBearing, eDistance);
-
 		// Add enemy information to Map
-		eMap.put(eName, new HashMap<String, Object>());
-		eMap.get(eName).put("eVelocity", eVelocity);
-		eMap.get(eName).put("eAbsBearing", eAbsBearing);
-		eMap.get(eName).put("eBearing", eBearing);
-		eMap.get(eName).put("ePos", ePos);
-		*/
-		
-
-		System.out.println("EnemyData: "+ myBot.getPos());		
-		
+		map.put(name, new HashMap<String, Object>());
+		map.get(name).put("velocity", velocity);
+		map.get(name).put("absBearing", absBearing);
+		map.get(name).put("bearing", bearing);
+		map.get(name).put("pos", pos);		
 	}
 
 	public void update(RobotDeathEvent e) {
-		eMap.remove(e.getName());
+		map.remove(e.getName());
+	}
+	
+	// ACCESSORS
+	public String getName() {
+		return this.name;
+	}
+
+	public double getAbsBearing() {
+		return this.absBearing;
+	}
+
+	public double getBearing() {
+		return this.bearing;
+	}
+
+	public double getDistance() {
+		return this.distance;
+	}
+	
+	public double getVelocity() {
+		return this.velocity;
+	}
+
+	public Point2D.Double getPos() {
+		return this.pos;
+	}
+
+	public LinkedHashMap<String, HashMap<String, Object>> getMap() {
+		return this.map;
 	}
 }

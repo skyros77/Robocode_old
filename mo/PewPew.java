@@ -8,12 +8,13 @@ public class PewPew extends AdvancedRobot {
 
 	BotData myBot;
 	EnemyData enemy;
+	//RadarData radar = new RadarData();	
 
 	public void run() {
 		myBot = new BotData(this);
 		enemy = new EnemyData(myBot);
+		
 		while (true) {	
-			//setTurnRadarRightRadians(radar.getRadarDir() * Double.POSITIVE_INFINITY);
 			setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 			scan();
 		}
@@ -22,7 +23,7 @@ public class PewPew extends AdvancedRobot {
 	public void onScannedRobot(ScannedRobotEvent e) {
 		myBot.update();
 		enemy.update(e);
-		// radar.update(e);
+		//radar.update(e);
 	}
 
 	public void onRobotDeath(RobotDeathEvent e) {
