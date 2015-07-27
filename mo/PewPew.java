@@ -2,7 +2,6 @@ package mo;
 
 import java.awt.Graphics2D;
 import mo.Data.*;
-import mo.Utils.*;
 import robocode.*;
 
 public class PewPew extends AdvancedRobot {
@@ -14,7 +13,8 @@ public class PewPew extends AdvancedRobot {
 		myBot = new BotData(this);
 		enemy = new EnemyData(myBot);
 		while (true) {	
-			setTurnRadarRightRadians(radar.getRadarDir() * Double.POSITIVE_INFINITY);
+			//setTurnRadarRightRadians(radar.getRadarDir() * Double.POSITIVE_INFINITY);
+			setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 			scan();
 		}
 	}

@@ -4,8 +4,6 @@ import robocode.*;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import mo.Utils.*;
-import mo.Data.*;
 
 public class EnemyData {
 
@@ -20,7 +18,7 @@ public class EnemyData {
 	private LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(5, 2, true);
 
 	// CONSTRUCTORS
-	public EnemyData(AdvancedRobot robot) {
+	public EnemyData(BotData robot) {
 		this.myBot = robot;
 	}
 	
