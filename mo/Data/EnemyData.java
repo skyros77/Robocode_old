@@ -38,7 +38,10 @@ public class EnemyData {
 		map.get(name).put("velocity", velocity);
 		map.get(name).put("absBearing", absBearing);
 		map.get(name).put("bearing", bearing);
-		map.get(name).put("pos", pos);		
+		map.get(name).put("pos", pos);	
+		
+		//debug
+		//BotUtils.printMap(map);
 	}
 
 	public void update(RobotDeathEvent e) {

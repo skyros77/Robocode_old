@@ -6,29 +6,34 @@ import robocode.*;
 
 public class PewPew extends AdvancedRobot {
 
-	BotData myBot;
-	EnemyData enemy;
-	//RadarData radar = new RadarData();	
-
+	//BotData myBot;
+	//EnemyData enemy;
+	//RadarData radar;
+	Data data;
 	public void run() {
-		myBot = new BotData(this);
-		enemy = new EnemyData(myBot);
+		data = new Data(this);
+		//myBot = new BotData(this);
+		//enemy = new EnemyData(myBot);
+		//radar = new RadarData(this);		
 		
 		while (true) {	
 			setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
+			setAhead(100);
 			scan();
 		}
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
-		myBot.update();
-		enemy.update(e);
+		data.update(e);
+		Enemy.debug();
+		//myBot.update();
+		//enemy.update(e);
 		//radar.update(e);
 	}
 
 	public void onRobotDeath(RobotDeathEvent e) {
-		myBot.update();
-		enemy.update(e);
+		//myBot.update();
+		//enemy.update(e);
 	}
 
 	public void onPaint(Graphics2D g) {
