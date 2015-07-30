@@ -11,43 +11,52 @@ import robocode.*;
 public class Data {
 
 	// VARIABLES
-	private AdvancedRobot myBot;
+	private static AdvancedRobot myBot;		
+	private static Radar radar;
+	private static Move move;
+	private static Paint paint;	
 
-	private static String name;
+	//general data
+	private static int botNum;
+	private static Point2D.Double field;
+	private static Point2D.Double fieldCentre;	
+	
+	//my data
+
 	private static Point2D.Double myPos;
+	
+	//enemy data
+	private static String name;
 	private static Point2D.Double pos;
-	private static double myHeading;
-	private static double myRadarHeading;
 	private static double bearing;
 	private static double absBearing;
 	private static double distance;
 	private static double velocity;
-	private static int botNum;
-	private static LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(5, 2, true);
 
+	private static LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
+
+	
 	// CONSTRUCTORS
-	public Data(AdvancedRobot e) {
-		this.myBot = e;
+	public Data(AdvancedRobot robot) {
+		myBot 		= robot;				
+		radar		= new Radar();		
+		move		= new Move();
+		paint		= new Paint();			
+	
+		botNum 		= robot.getOthers();
+		field		= new Point2D.Double(robot.getBattleFieldWidth(),robot.getBattleFieldHeight());
+		fieldCentre	= new Point2D.Double(field.x/2,field.y/2);		
 	}
-
+	
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		name = e.getName();
-		myPos = new Point2D.Double(myBot.getX(), myBot.getY());
-		pos = Utils.getPos(myPos, absBearing, distance);
-		myHeading = myBot.getHeadingRadians();
-		myRadarHeading = myBot.getRadarHeadingRadians();
-		bearing = e.getBearingRadians();
-		absBearing = e.getBearingRadians() + myHeading;
-		distance = e.getDistance();
-		velocity = e.getVelocity();
-		setBotNum(myBot.getOthers());
-
-		// Add enemy information to Map
-		map.put(name, new HashMap<String, Object>());
-		map.get(name).put("velocity", velocity);
-		map.get(name).put("absBearing", absBearing);
-		map.get(name).put("pos", pos);
+		setVars(e);
+		setMap();
+		
+		//update robot
+		move.update();		
+		radar.update(e);
+	
 	}
 
 	public void update(RobotDeathEvent e) {
@@ -55,48 +64,71 @@ public class Data {
 	}
 
 	public void update(Graphics2D g) {
-		Paint.enPos(g);
+		paint.update(g);
 	}
+	
 
-	// SETTER
-	public static void setBotNum(int botNum) {
-		Data.botNum = botNum;
+	//update variable information
+	public void setVars(ScannedRobotEvent e) {
+		//my data
+		myPos		= new Point2D.Double(myBot.getX(), myBot.getY());
+		botNum		= myBot.getOthers();	
+		
+		//enemy data
+		name		= e.getName();
+		bearing		= e.getBearingRadians();
+		absBearing	= e.getBearingRadians() + myBot.getHeadingRadians();
+		distance	= e.getDistance();
+		velocity	= e.getVelocity();
+		pos			= MyUtils.getPos(myPos, absBearing, distance);		
+	}	
+
+	public void setMap() {
+		// Add enemy information to Map
+		map.put(name, new HashMap<String, Object>());
+		map.get(name).put("velocity", velocity);
+		map.get(name).put("absBearing", absBearing);
+		map.get(name).put("pos", pos);
 	}
-
-	// GETTER
-	public static String getName() {
+	
+	// ACCESSORS
+	public static String getEnName() {
 		return name;
 	}
 
+	public static Point2D.Double getField() {
+		return field;
+	}
+	
+	public static Point2D.Double getFieldCentre() {
+		return fieldCentre;
+	}
+	
 	public static Point2D.Double getMyPos() {
 		return myPos;
 	}
 
-	public static Point2D.Double getPos() {
+	public static AdvancedRobot getMyBot() {
+		return myBot;
+	}
+	
+	public static Point2D.Double getEnPos() {
 		return pos;
 	}
 
-	public static double getMyHeading() {
-		return myHeading;
-	}
-
-	public static double getMyRadarHeading() {
-		return myRadarHeading;
-	}
-
-	public static double getbearing() {
+	public static double getEnBearing() {
 		return bearing;
 	}
 
-	public static double getAbsBearing() {
+	public static double getEnAbsBearing() {
 		return absBearing;
 	}
 
-	public static double getDistance() {
+	public static double getEnDistance() {
 		return distance;
 	}
 
-	public static double getVelocity() {
+	public static double getEnVelocity() {
 		return velocity;
 	}
 
@@ -104,7 +136,7 @@ public class Data {
 		return botNum;
 	}
 
-	public static LinkedHashMap<String, HashMap<String, Object>> getMap() {
+	public static LinkedHashMap<String, HashMap<String, Object>> getEnMap() {
 		return map;
 	}
 
