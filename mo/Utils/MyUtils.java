@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import robocode.util.Utils;
+
 public class MyUtils {
 
 	// print out map information
@@ -19,9 +21,9 @@ public class MyUtils {
 		double y = pos.y + distance * Math.cos(angle);
 		return new Point2D.Double(x, y);
 	}
-	
-	//return the absolute bearing between two points
-    public static double getAbsBearing(Point2D source, Point2D target) {
-		return Math.atan2(target.getX()-source.getX(), target.getY()-source.getY());
-    }	
+
+	// return the absolute bearing between two points
+	public static double getAbsBearing(Point2D.Double source, Point2D.Double target) {
+		return Math.atan2(target.x - source.x, target.y - source.y);
+	}
 }

@@ -6,11 +6,12 @@ import java.awt.Graphics2D;
 
 public class PewPew extends AdvancedRobot {
 	Data data;
-	Move move = new Move();
-	Radar radar = new Radar();
 	public void run() {
+		setAdjustGunForRobotTurn(true);
+		setAdjustRadarForGunTurn(true);
+		setAdjustRadarForRobotTurn(true);		
+		
 		data = new Data(this);
-		//Data.setBotNum(getOthers());
 		while (true) {
 			setTurnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
 			execute();
@@ -19,7 +20,6 @@ public class PewPew extends AdvancedRobot {
 
 	public void onScannedRobot(ScannedRobotEvent e) {
 		data.update(e);	
-
 	}
 
 	public void onRobotDeath(RobotDeathEvent e) {
@@ -27,10 +27,6 @@ public class PewPew extends AdvancedRobot {
 	}
 
 	public void onPaint(Graphics2D g) {
-		data.update(g);	
-	}
-	
-	public void onSkippedTurnEvent(long skippedTurn) {
-		System.out.println("SKIPPED TURN!!");
+		data.update(g);
 	}
 }

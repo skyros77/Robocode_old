@@ -11,52 +11,56 @@ import robocode.*;
 public class Data {
 
 	// VARIABLES
-	private static AdvancedRobot myBot;		
+	private static AdvancedRobot r;
 	private static Radar radar;
+	private static Gun gun;
 	private static Move move;
-	private static Paint paint;	
+	private static Paint paint;
 
-	//general data
-	private static int botNum;
-	private static Point2D.Double field;
-	private static Point2D.Double fieldCentre;	
-	
-	//my data
-
+	// robot data
 	private static Point2D.Double myPos;
-	
-	//enemy data
+
+	// enemy data
 	private static String name;
 	private static Point2D.Double pos;
-	private static double bearing;
 	private static double absBearing;
 	private static double distance;
 	private static double velocity;
 
 	private static LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
 
-	
 	// CONSTRUCTORS
 	public Data(AdvancedRobot robot) {
-		myBot 		= robot;				
-		radar		= new Radar();		
-		move		= new Move();
-		paint		= new Paint();			
-	
-		botNum 		= robot.getOthers();
-		field		= new Point2D.Double(robot.getBattleFieldWidth(),robot.getBattleFieldHeight());
-		fieldCentre	= new Point2D.Double(field.x/2,field.y/2);		
+		r = robot;
+		radar = new Radar(r);
+		gun = new Gun(r);
+		move = new Move(r);
+		paint = new Paint(r);
 	}
-	
+
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		setVars(e);
-		setMap();
-		
-		//update robot
-		move.update();		
+
+		// update robot
 		radar.update(e);
-	
+		gun.update(e);
+		move.update();
+
+		setVars(e);
+		setMap(e);
+		
+		
+		///* ATTEMPTING TO FIND IF ENEMY IS FACING MY BOT - FAILED
+		double absBearing2 = MyUtils.getAbsBearing(myPos,pos);
+		double enmBearing =  e.getHeadingRadians()-Math.PI;
+		double danger = enmBearing - absBearing2;
+		System.out.println(
+			"enmBearing: " + enmBearing +"\n"+
+			"absBearing: " + absBearing2 +"\n"+
+			"diff: " + (enmBearing/absBearing2) +"\n"
+				);
+
+		 
 	}
 
 	public void update(RobotDeathEvent e) {
@@ -66,78 +70,32 @@ public class Data {
 	public void update(Graphics2D g) {
 		paint.update(g);
 	}
-	
 
-	//update variable information
+	// update variable information
 	public void setVars(ScannedRobotEvent e) {
-		//my data
-		myPos		= new Point2D.Double(myBot.getX(), myBot.getY());
-		botNum		= myBot.getOthers();	
-		
-		//enemy data
-		name		= e.getName();
-		bearing		= e.getBearingRadians();
-		absBearing	= e.getBearingRadians() + myBot.getHeadingRadians();
-		distance	= e.getDistance();
-		velocity	= e.getVelocity();
-		pos			= MyUtils.getPos(myPos, absBearing, distance);		
-	}	
+		// my data
+		myPos = new Point2D.Double(r.getX(), r.getY());
 
-	public void setMap() {
+		// enemy data
+		name = e.getName();
+		absBearing = e.getBearingRadians() + r.getHeadingRadians();
+		distance = e.getDistance();
+		velocity = e.getVelocity();
+		pos = MyUtils.getPos(myPos, absBearing, distance);
+	}
+
+	public void setMap(ScannedRobotEvent e) {
 		// Add enemy information to Map
 		map.put(name, new HashMap<String, Object>());
 		map.get(name).put("velocity", velocity);
-		map.get(name).put("absBearing", absBearing);
+		map.get(name).put("absBearing", e.getBearingRadians() + r.getHeadingRadians());
 		map.get(name).put("pos", pos);
+		map.get(name).put("distance", distance);
+
 	}
-	
+
 	// ACCESSORS
-	public static String getEnName() {
-		return name;
-	}
-
-	public static Point2D.Double getField() {
-		return field;
-	}
-	
-	public static Point2D.Double getFieldCentre() {
-		return fieldCentre;
-	}
-	
-	public static Point2D.Double getMyPos() {
-		return myPos;
-	}
-
-	public static AdvancedRobot getMyBot() {
-		return myBot;
-	}
-	
-	public static Point2D.Double getEnPos() {
-		return pos;
-	}
-
-	public static double getEnBearing() {
-		return bearing;
-	}
-
-	public static double getEnAbsBearing() {
-		return absBearing;
-	}
-
-	public static double getEnDistance() {
-		return distance;
-	}
-
-	public static double getEnVelocity() {
-		return velocity;
-	}
-
-	public static int getBotNum() {
-		return botNum;
-	}
-
-	public static LinkedHashMap<String, HashMap<String, Object>> getEnMap() {
+	public static LinkedHashMap<String, HashMap<String, Object>> eMap() {
 		return map;
 	}
-
 }
