@@ -1,12 +1,12 @@
 package mo.Paint;
 
-import robocode.AdvancedRobot;
+import robocode.*;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
-import mo.Data.Radar;
+import mo.Data.Gun;
 
 public class Paint {
 
@@ -22,12 +22,27 @@ public class Paint {
 	// METHODS
 	public void update(Graphics2D gfx) {
 		g = gfx;
-		targetPos(Radar.getRadarTargetPos());
+	}
+	
+	public void update(ScannedRobotEvent e) {
 	}
 
-	public static void targetPos(Point2D.Double target) {
+	public static void targetPos(Point2D.Double source,Point2D.Double target) {
 		g.setColor(new Color(255, 0, 0, 100));
-		g.fillOval((int) target.x - 10, (int) target.y - 10, 20, 20);
-		g.drawLine((int) r.getX(), (int) r.getY(), (int) target.x, (int) target.y);
+		g.fillOval((int) target.x - 8, (int) target.y - 8, 16, 16);
+		g.drawLine((int) source.x, (int) source.y, (int) target.x, (int) target.y);
+	}	
+	
+	public static void predictions() {
+		g.setColor(new Color(255,0,0,100));
+		System.out.println(Gun.getPredictions());
+		//for (Point2D.Double p : predictions)
+		/*
+		for (int i=0; i<Gun.getPredictions().size()-1; i++)
+		{
+			Gun.getPredictions().get(i);
+			g.drawLine((int)Gun.getPredictions().get(i).x,(int)Gun.getPredictions().get(i).y,(int)Gun.getPredictions().get(i+1).x,(int)Gun.getPredictions().get(i+1).y);
+		}
+		*/
 	}
 }

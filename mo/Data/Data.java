@@ -18,7 +18,7 @@ public class Data {
 	private static Paint paint;
 
 	// robot data
-	private static Point2D.Double myPos;
+	private static Point2D.Double rPos;
 
 	// enemy data
 	private static String name;
@@ -26,6 +26,8 @@ public class Data {
 	private static double absBearing;
 	private static double distance;
 	private static double velocity;
+
+	private static Point2D.Double v1, v2;
 
 	private static LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
 
@@ -45,22 +47,24 @@ public class Data {
 		radar.update(e);
 		gun.update(e);
 		move.update();
+		paint.update(e);
 
 		setVars(e);
 		setMap(e);
-		
-		
-		///* ATTEMPTING TO FIND IF ENEMY IS FACING MY BOT - FAILED
-		double absBearing2 = MyUtils.getAbsBearing(myPos,pos);
-		double enmBearing =  e.getHeadingRadians()-Math.PI;
-		double danger = enmBearing - absBearing2;
-		System.out.println(
-			"enmBearing: " + enmBearing +"\n"+
-			"absBearing: " + absBearing2 +"\n"+
-			"diff: " + (enmBearing/absBearing2) +"\n"
-				);
 
-		 
+		// check if scannedrobot is facing me or not (0-1 range)
+		// absBearing of target and my bot
+		double targetBearing = MyUtils.getAbsBearing(pos, rPos) + Math.PI;
+		// get normalized position of robot bearing and target bearing
+		v1 = MyUtils.getPos(targetBearing);
+		v2 = MyUtils.getPos(e.getHeadingRadians());
+		// dot product of two vectors
+		double dot = MyUtils.dot(v1, v2);
+		// angle between two vectors
+		double angle = MyUtils.angle(dot);
+		// normalize angle into 0-1 range
+		double danger = angle / Math.PI;
+		System.out.println(danger);
 	}
 
 	public void update(RobotDeathEvent e) {
@@ -74,14 +78,14 @@ public class Data {
 	// update variable information
 	public void setVars(ScannedRobotEvent e) {
 		// my data
-		myPos = new Point2D.Double(r.getX(), r.getY());
+		rPos = new Point2D.Double(r.getX(), r.getY());
 
 		// enemy data
 		name = e.getName();
 		absBearing = e.getBearingRadians() + r.getHeadingRadians();
 		distance = e.getDistance();
 		velocity = e.getVelocity();
-		pos = MyUtils.getPos(myPos, absBearing, distance);
+		pos = MyUtils.getPos(rPos, absBearing, distance);
 	}
 
 	public void setMap(ScannedRobotEvent e) {
@@ -98,4 +102,17 @@ public class Data {
 	public static LinkedHashMap<String, HashMap<String, Object>> eMap() {
 		return map;
 	}
+
+	public static Point2D.Double ePos() {
+		return pos;
+	}
+
+	public static Point2D.Double v1() {
+		return v1;
+	}
+
+	public static Point2D.Double v2() {
+		return v2;
+	}
+
 }
