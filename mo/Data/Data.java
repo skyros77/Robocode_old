@@ -34,10 +34,11 @@ public class Data {
 	// CONSTRUCTORS
 	public Data(AdvancedRobot robot) {
 		r = robot;
+		paint = new Paint(r);		
 		radar = new Radar(r);
 		gun = new Gun(r);
 		move = new Move(r);
-		paint = new Paint(r);
+
 	}
 
 	// METHODS
@@ -47,7 +48,6 @@ public class Data {
 		radar.update(e);
 		gun.update(e);
 		move.update();
-		paint.update(e);
 
 		setVars(e);
 		setMap(e);
@@ -64,7 +64,7 @@ public class Data {
 		double angle = MyUtils.angle(dot);
 		// normalize angle into 0-1 range
 		double danger = angle / Math.PI;
-		System.out.println(danger);
+		//System.out.println(danger);
 	}
 
 	public void update(RobotDeathEvent e) {

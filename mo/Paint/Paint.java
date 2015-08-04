@@ -5,8 +5,11 @@ import robocode.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+import java.util.*;
 
 import mo.Data.Gun;
+import mo.Data.Radar;
 
 public class Paint {
 
@@ -21,10 +24,13 @@ public class Paint {
 
 	// METHODS
 	public void update(Graphics2D gfx) {
-		g = gfx;
-	}
-	
-	public void update(ScannedRobotEvent e) {
+		g = gfx;	
+		
+		//PAINT STUFF
+		targetPos(Radar.getRobotPos(),Radar.getRadarTarget());
+		paintPredictions();
+		
+		
 	}
 
 	public static void targetPos(Point2D.Double source,Point2D.Double target) {
@@ -33,16 +39,15 @@ public class Paint {
 		g.drawLine((int) source.x, (int) source.y, (int) target.x, (int) target.y);
 	}	
 	
-	public static void predictions() {
-		g.setColor(new Color(255,0,0,100));
-		System.out.println(Gun.getPredictions());
-		//for (Point2D.Double p : predictions)
-		/*
-		for (int i=0; i<Gun.getPredictions().size()-1; i++)
-		{
-			Gun.getPredictions().get(i);
-			g.drawLine((int)Gun.getPredictions().get(i).x,(int)Gun.getPredictions().get(i).y,(int)Gun.getPredictions().get(i+1).x,(int)Gun.getPredictions().get(i+1).y);
+	public static void paintPredictions() {
+		try {
+			g.setColor(new Color(255,0,0,100));
+			ListIterator<Double> i = Gun.getPredictions().listIterator();
+			while(i.hasNext()) {
+				g.fillOval((int) i.next().x - 2, (int) i.next().y - 2, 4, 4);
+			}		
+		} catch(NoSuchElementException e) {
+			//System.out.println("paintPredictions: " +e);
 		}
-		*/
 	}
 }

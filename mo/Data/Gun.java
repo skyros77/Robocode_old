@@ -4,7 +4,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
+import mo.Paint.Paint;
 import mo.Utils.MyUtils;
 
 import robocode.*;
@@ -58,8 +60,13 @@ public class Gun {
 		r.setTurnGunRightRadians(Utils.normalRelativeAngle(gunTurn));
 
 		// fire gun
-		if (r.getGunTurnRemainingRadians() < .1)
-			r.setFire(FIRE_POWER);
+		if (r.getGunTurnRemainingRadians() < .1) {
+			//r.setFire(FIRE_POWER);
+		}
+
+		//debug
+		//Paint.paintPredictions();
+		
 	}
 
 	// ACCESSORS
