@@ -16,7 +16,7 @@ public class Gun {
 	private static AdvancedRobot r;
 	private static Point2D.Double ePos;
 	private static Point2D.Double rPos;
-	private static double FIRE_POWER = 0.01;
+	private static double FIRE_POWER = 3;
 	private static double FIRE_SPEED = Rules.getBulletSpeed(FIRE_POWER);
 	private static double pHeading;
 
@@ -34,9 +34,9 @@ public class Gun {
 
 	public void doSingleTickGun(ScannedRobotEvent e) {
 		/*
-		 * basic single tick predictive shooter, works very well for linear and radial movements
+		 * basic single tick predictive shooter, works very well for linear and
+		 * radial movements
 		 */
-
 		predictions.clear();
 		rPos = new Point2D.Double(r.getX(), r.getY());
 		ePos = MyUtils.getPos(rPos, e.getBearingRadians() + r.getHeadingRadians(), e.getDistance());
@@ -58,10 +58,11 @@ public class Gun {
 		r.setTurnGunRightRadians(Utils.normalRelativeAngle(gunTurn));
 
 		// fire gun
-		if (r.getGunTurnRemainingRadians() < .1) r.setFire(FIRE_POWER);
+		if (r.getGunTurnRemainingRadians() < .1)
+			r.setFire(FIRE_POWER);
 	}
-	
-	//ACCESSORS
+
+	// ACCESSORS
 	public static List<Double> getPredictions() {
 		return predictions;
 	}
