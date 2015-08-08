@@ -4,9 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-import mo.Paint.Paint;
 import mo.Utils.MyUtils;
 
 import robocode.*;
@@ -18,7 +16,7 @@ public class Gun {
 	private static AdvancedRobot r;
 	private static Point2D.Double ePos;
 	private static Point2D.Double rPos;
-	private static double FIRE_POWER = 3;
+	private static double FIRE_POWER = 0.0;
 	private static double FIRE_SPEED = Rules.getBulletSpeed(FIRE_POWER);
 	private static double pHeading;
 
@@ -61,12 +59,8 @@ public class Gun {
 
 		// fire gun
 		if (r.getGunTurnRemainingRadians() < .1) {
-			//r.setFire(FIRE_POWER);
+			r.setFire(FIRE_POWER);
 		}
-
-		//debug
-		//Paint.paintPredictions();
-		
 	}
 
 	// ACCESSORS
