@@ -42,6 +42,21 @@ public class MyUtils {
 		return Math.acos(dot);
 	}
 	
+	//random number generator
+	public static int randomNum(int min, int max)
+	{
+	   int range = (max - min) + 1;
+	   return (int)(Math.random() * range) + min;
+	}
 	
+	//normalize a range of numbers between min/max values
+	public static double normalizeRange(double value, double min, double max) {
+		return (value-min)/(max-min);
+	}
+	
+	// clamp a range of numbers between min/max values
+	public static double clampRange(double value, double min, double max) {
+		return Math.max(min,Math.min(value,max));
+	}
 	
 }
