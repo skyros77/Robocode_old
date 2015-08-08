@@ -34,11 +34,10 @@ public class Data {
 	// CONSTRUCTORS
 	public Data(AdvancedRobot robot) {
 		r = robot;
-		paint = new Paint(r);		
 		radar = new Radar(r);
 		gun = new Gun(r);
 		move = new Move(r);
-
+		paint = new Paint(r);
 	}
 
 	// METHODS
@@ -47,11 +46,12 @@ public class Data {
 		// update robot
 		radar.update(e);
 		gun.update(e);
-		move.update();
+		move.update(e);
 
 		setVars(e);
 		setMap(e);
 
+		/*
 		// check if scannedrobot is facing me or not (0-1 range)
 		// absBearing of target and my bot
 		double targetBearing = MyUtils.getAbsBearing(pos, rPos) + Math.PI;
@@ -64,7 +64,8 @@ public class Data {
 		double angle = MyUtils.angle(dot);
 		// normalize angle into 0-1 range
 		double danger = angle / Math.PI;
-		//System.out.println(danger);
+		System.out.println(danger);
+		*/
 	}
 
 	public void update(RobotDeathEvent e) {
