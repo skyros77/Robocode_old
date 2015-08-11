@@ -1,3 +1,10 @@
+/* TODO
+ * Check if enemy linear velocity direction is the same as mine, if it is, reverse direction.
+ * Use antigrav or soemthing similar to drive bot direction
+ * Check for chase bots and adjust movement profile
+ * Create a movement pattern that trys to force enemies into corners
+ */
+
 package mo.Data;
 
 import java.awt.geom.Point2D;
@@ -9,17 +16,17 @@ import robocode.util.Utils;
 
 public class Move {
 
-
 	// VARIABLES
 	private static AdvancedRobot r;
 	private static Point2D.Double myPos;
-	private static Point2D.Double ePos;	
-	private static int direction = 1;
+	private static Point2D.Double ePos;
+	private static int dir = 1;
+	private static double angle;
+	private static double range;
+	private static double distance = 250; //desired target distance
 	private static double absBearing;
-	private static double turn;	
-	private static double distance;
+	private static double turn;
 
-	
 	// CONSTRUCTORS
 	public Move(AdvancedRobot robot) {
 		r = robot;
@@ -27,49 +34,25 @@ public class Move {
 
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		
-		/*
-		//basic circle
-		pos = new Point2D.Double(r.getX(), r.getY());
-		target = new Point2D.Double(r.getBattleFieldWidth() / 2, r.getBattleFieldHeight() / 2);
-		distance = pos.distance(target);		
-		absBearing = MyUtils.getAbsBearing(pos, target);
-		turn = (distance>100) ? -0.2 : 0.2;
-		angle = Utils.normalRelativeAngle(absBearing - r.getHeadingRadians()  + turn);		
-		r.setTurnRightRadians(angle + Math.PI/2);
-		r.setAhead(125);
-		*/
-				
-		/*
-		if (r.getTime() % 8 == 0) {
-			int num = MyUtils.randomNum(-1,1);
-			if (num!=0) direction *= num;
-		}
-		
-		distance = 200/e.getDistance() < 1 ? 1 : -1;
 
-		r.setAhead(100 * direction);
-		r.setTurnRightRadians(Utils.normalRelativeAngle(e.getBearingRadians() + Math.PI/2 - (distance*direction)));
-		*/
-	
-		myPos = new Point2D.Double(r.getX(),r.getY());
+		// set random direction - TEMP
+		if (r.getTime() % MyUtils.randomNum(5, 30) == 0) dir *= -1;
+
+		/*
+		 * turn bot perpendicular to target using shortest distance possible
+		 * check desired range to target and adjust turn angle to compensate 
+		 */
+		myPos = new Point2D.Double(r.getX(), r.getY());
 		ePos = MyUtils.getPos(myPos, e.getBearingRadians() + r.getHeadingRadians(), e.getDistance());
 		absBearing = MyUtils.getAbsBearing(myPos, ePos);
-		double range = MyUtils.clampRange(MyUtils.normalizeRange(e.getDistance(), 250, 350),-1,1);
-		//double clamp = MyUtils.clampRange(distance, -1, 1);
-		
-		
-		
-		
-		turn = Utils.normalRelativeAngle(absBearing-r.getHeadingRadians()) > 0 ? 1 : -1;
-		turn *= (Math.PI/2)*distance;
-		System.out.println(turn);
-		
-		
-		r.setAhead(100);		
-		r.setTurnRightRadians(Utils.normalRelativeAngle(e.getBearingRadians() + Math.PI/2));			
-		//r.setTurnRightRadians(Utils.normalRelativeAngle(e.getBearingRadians() + turn));		
-		
+		range = MyUtils.clampRange(MyUtils.normalizeRange(e.getDistance(), distance, distance+100), -1, 1); //desired range = 300	
+		angle = Utils.normalRelativeAngle(absBearing - r.getHeadingRadians());
+		turn = angle < 0 ? angle + (Math.PI / 2) - (range * dir) : angle - (Math.PI / 2) + (range * dir);
+
+		r.setAhead(100 * dir);
+		r.setTurnRightRadians(turn);
+
+		System.out.println(e.getDistance() +"/"+ range);
 	}
 
 }

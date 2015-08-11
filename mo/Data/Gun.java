@@ -16,9 +16,11 @@ public class Gun {
 	private static AdvancedRobot r;
 	private static Point2D.Double ePos;
 	private static Point2D.Double rPos;
-	private static double FIRE_POWER = 0.0;
-	private static double FIRE_SPEED = Rules.getBulletSpeed(FIRE_POWER);
+	private static double firePower = 0;
+	private static double fireSpeed = Rules.getBulletSpeed(firePower);
 	private static double pHeading;
+	private static double absBearing;
+	private static double diff;
 
 	private static List<Point2D.Double> predictions = new ArrayList<Point2D.Double>();
 
@@ -34,32 +36,30 @@ public class Gun {
 
 	public void doSingleTickGun(ScannedRobotEvent e) {
 		/*
-		 * basic single tick predictive shooter, works very well for linear and
-		 * radial movements
+		 * single tick predictive gun
 		 */
 		predictions.clear();
 		rPos = new Point2D.Double(r.getX(), r.getY());
 		ePos = MyUtils.getPos(rPos, e.getBearingRadians() + r.getHeadingRadians(), e.getDistance());
 
 		double cHeading = e.getHeadingRadians();
-		double diff = cHeading - pHeading;
+		diff = cHeading - pHeading;
 
-		for (int i = 0; i < rPos.distance(ePos) / FIRE_SPEED; i++) {
+		for (int i = 0; i < rPos.distance(ePos) / fireSpeed; i++) {
 			cHeading += diff;
-			ePos = MyUtils.getPos(ePos, diff + cHeading, e.getVelocity());
+			ePos = MyUtils.getPos(ePos, cHeading + diff, e.getVelocity());
 			predictions.add(ePos);
 		}
 
 		pHeading = e.getHeadingRadians();
 
 		// turn gun
-		double absoluteBearing = Math.atan2(ePos.x - rPos.x, ePos.y - rPos.y);
-		double gunTurn = absoluteBearing - r.getGunHeadingRadians();
-		r.setTurnGunRightRadians(Utils.normalRelativeAngle(gunTurn));
+		absBearing = MyUtils.getAbsBearing(rPos, ePos);
+		r.setTurnGunRightRadians(Utils.normalRelativeAngle(absBearing - r.getGunHeadingRadians()));
 
 		// fire gun
 		if (r.getGunTurnRemainingRadians() < .1) {
-			r.setFire(FIRE_POWER);
+			r.setFire(firePower);
 		}
 	}
 

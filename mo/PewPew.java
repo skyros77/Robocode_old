@@ -5,20 +5,21 @@ import robocode.*;
 import java.awt.Graphics2D;
 
 public class PewPew extends AdvancedRobot {
+	
+	// VARIABLES
 	Data data;
+
 	public void run() {
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
-		setAdjustRadarForRobotTurn(true);		
+		setAdjustRadarForRobotTurn(true);
 		data = new Data(this);
-		while (true) {
+		while (true)
 			turnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
-			execute();
-		}
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
-		data.update(e);	
+		data.update(e);
 	}
 
 	public void onRobotDeath(RobotDeathEvent e) {

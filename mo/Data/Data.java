@@ -35,8 +35,8 @@ public class Data {
 	public Data(AdvancedRobot robot) {
 		r = robot;
 		radar = new Radar(r);
-		gun = new Gun(r);
 		move = new Move(r);
+		gun = new Gun(r);
 		paint = new Paint(r);
 	}
 
@@ -50,22 +50,6 @@ public class Data {
 
 		setVars(e);
 		setMap(e);
-
-		/*
-		// check if scannedrobot is facing me or not (0-1 range)
-		// absBearing of target and my bot
-		double targetBearing = MyUtils.getAbsBearing(pos, rPos) + Math.PI;
-		// get normalized position of robot bearing and target bearing
-		v1 = MyUtils.getPos(targetBearing);
-		v2 = MyUtils.getPos(e.getHeadingRadians());
-		// dot product of two vectors
-		double dot = MyUtils.dot(v1, v2);
-		// angle between two vectors
-		double angle = MyUtils.angle(dot);
-		// normalize angle into 0-1 range
-		double danger = angle / Math.PI;
-		System.out.println(danger);
-		*/
 	}
 
 	public void update(RobotDeathEvent e) {
