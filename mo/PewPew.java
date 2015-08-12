@@ -8,7 +8,7 @@ public class PewPew extends AdvancedRobot {
 	
 	// VARIABLES
 	Data data;
-
+    
 	public void run() {
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);

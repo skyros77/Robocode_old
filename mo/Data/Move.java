@@ -52,7 +52,7 @@ public class Move {
 		r.setAhead(100 * dir);
 		r.setTurnRightRadians(turn);
 
-		System.out.println(e.getDistance() +"/"+ range);
+		//System.out.println(e.getDistance() +"/"+ range);
 	}
 
 }

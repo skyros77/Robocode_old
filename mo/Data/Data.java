@@ -2,8 +2,7 @@ package mo.Data;
 
 import java.awt.Graphics2D;
 import java.awt.geom.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.awt.geom.Point2D.Double;
 import mo.Utils.*;
 import mo.Paint.Paint;
 import robocode.*;
@@ -11,49 +10,53 @@ import robocode.*;
 public class Data {
 
 	// VARIABLES
-	private static AdvancedRobot r;
-	private static Radar radar;
-	private static Gun gun;
-	private static Move move;
-	private static Paint paint;
+	protected static AdvancedRobot r;
+	protected static Radar radar;
+	protected static Gun gun;
+	protected static Move move;
+	protected static Paint paint;
 
-	// robot data
-	private static Point2D.Double rPos;
+	// ROBOT DATA
+	protected static Point2D.Double rPos;
 
-	// enemy data
-	private static String name;
-	private static Point2D.Double pos;
-	private static double absBearing;
-	private static double distance;
-	private static double velocity;
+	// ENEMY DATA
+	protected static String eName;
+	protected static double eVelocity;
+	protected static double eAbsBearing;
+	protected static double eDistance;
+	protected static Point2D.Double ePos;
+	protected static double poop;	
 
-	private static Point2D.Double v1, v2;
-
-	private static LinkedHashMap<String, HashMap<String, Object>> map = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
+	// CONSTANT DATA
+	protected static Point2D.Double field;
+	protected static Point2D.Double fieldCentre;	
+	
 
 	// CONSTRUCTORS
+	public Data() {}
+	
 	public Data(AdvancedRobot robot) {
 		r = robot;
 		radar = new Radar(r);
-		move = new Move(r);
 		gun = new Gun(r);
+		move = new Move(r);
 		paint = new Paint(r);
+		
+		field = new Double(r.getBattleFieldWidth(), r.getBattleFieldHeight());
+		fieldCentre = new Double(r.getBattleFieldWidth()/2, r.getBattleFieldHeight()/2);		
 	}
 
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-
 		// update robot
+		setVars(e);		
 		radar.update(e);
 		gun.update(e);
 		move.update(e);
 
-		setVars(e);
-		setMap(e);
 	}
 
 	public void update(RobotDeathEvent e) {
-		map.remove(e.getName());
 	}
 
 	public void update(Graphics2D g) {
@@ -66,38 +69,38 @@ public class Data {
 		rPos = new Point2D.Double(r.getX(), r.getY());
 
 		// enemy data
-		name = e.getName();
-		absBearing = e.getBearingRadians() + r.getHeadingRadians();
-		distance = e.getDistance();
-		velocity = e.getVelocity();
-		pos = MyUtils.getPos(rPos, absBearing, distance);
+		eName = e.getName();
+		eVelocity = e.getVelocity();
+		eAbsBearing = e.getBearingRadians() + r.getHeadingRadians();
+		eDistance = e.getDistance();
+		ePos = MyUtils.getPos(rPos, eAbsBearing, eDistance);
 	}
 
-	public void setMap(ScannedRobotEvent e) {
-		// Add enemy information to Map
-		map.put(name, new HashMap<String, Object>());
-		map.get(name).put("velocity", velocity);
-		map.get(name).put("absBearing", e.getBearingRadians() + r.getHeadingRadians());
-		map.get(name).put("pos", pos);
-		map.get(name).put("distance", distance);
-
+	// GETTERS
+	public static String eName() {
+		return eName;
 	}
 
-	// ACCESSORS
-	public static LinkedHashMap<String, HashMap<String, Object>> eMap() {
-		return map;
+	public static double eVelocity() {
+		return eVelocity;
 	}
 
-	public static Point2D.Double ePos() {
-		return pos;
+	public static double eAbsBearing() {
+		return eAbsBearing;
 	}
 
-	public static Point2D.Double v1() {
-		return v1;
+	public static double eDistance() {
+		return eDistance;
 	}
 
-	public static Point2D.Double v2() {
-		return v2;
+	public static Double ePos() {
+		return ePos;
 	}
+
+	public static Double field() {
+		return field;
+	}
+
+	// SETTERS
 
 }
