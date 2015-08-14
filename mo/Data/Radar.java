@@ -6,59 +6,64 @@
 
 package mo.Data;
 
-import mo.Utils.*;
-import mo.Data.*;
-
 import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import mo.Utils.*;
+import mo.Data.Data;
 import robocode.AdvancedRobot;
 import robocode.RobotDeathEvent;
 import robocode.ScannedRobotEvent;
-import robocode.util.*;
+import robocode.util.Utils;
 
-public class Radar extends Data {
+public class Radar extends Data{
 
 	// VARIABLES
+	private static Point2D.Double rPos;
+	private static double robotNum;	
+	
+	
+
+	// VARIABLES
+	/*	
 	private static AdvancedRobot r;
 
-	//private static Point2D.Double rPos;
+	private static Point2D.Double rPos;
 	private static Point2D.Double ePos;
 	private static String eName;
 	private static double eVelocity;
 	private static double eAbsBearing;
 	private static double eDistance;
 
-	private static Point2D.Double centre;
+
 	private static Point2D.Double target;
 	private static double radarDir;
-	private static double absBearing;
+	//private static double absBearing;
 	private static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
-
+*/
+	
 	// CONSTRUCTOR
 	public Radar() {}
 	
-	public Radar(AdvancedRobot robot) {
-		r = robot;
-		rPos = new Point2D.Double(r.getX(), r.getY());
-		centre = new Point2D.Double(r.getBattleFieldWidth() / 2, r.getBattleFieldHeight() / 2);
-		radarDir = Utils.normalRelativeAngle(MyUtils.getAbsBearing(rPos, centre) - r.getRadarHeadingRadians());
-		target = centre;
-	}
-
+	public Radar(AdvancedRobot robot) {}	
+	
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		updateVars(e);
-		setMap(e);		
-		
-		if (r.getOthers() == 1)
-			lockRadar(e);
-		else
-			sweepRadar(e);
+		System.out.println(get_robotNum());
+		//updateVars(e);
+		//setMap(e);
+
+		if (get_robotNum() == 1) {
+			//lockRadar(e);
+		}
+		else {
+			//sweepRadar(e);
+		}
+
 	}
 
+	/*
 	public void update(RobotDeathEvent e) {
 		eMap.remove(e.getName());
 	}
@@ -70,6 +75,7 @@ public class Radar extends Data {
 		eAbsBearing = e.getBearingRadians() + r.getHeadingRadians();
 		eDistance = e.getDistance();
 		ePos = MyUtils.getPos(rPos, absBearing, eDistance);
+
 	}
 
 	public void setMap(ScannedRobotEvent e) {
@@ -81,19 +87,27 @@ public class Radar extends Data {
 		eMap.get(eName).put("distance", eDistance);
 
 	}
-
+*/
+	
 	/*
 	 * Perfect lock for a single target
 	 */
+	
+	/*
 	public void lockRadar(ScannedRobotEvent e) {
-		target = MyUtils.getPos(rPos, e.getBearingRadians() + r.getHeadingRadians(), e.getDistance());
-		double turn = r.getHeadingRadians() + e.getBearingRadians() - r.getRadarHeadingRadians();
+		target = MyUtils.getPos(Data.rPos, Data.eAbsBearing, eDistance);
+		//double turn = e.getBearingRadians() + r.getHeadingRadians() - r.getRadarHeadingRadians();
+		double turn = Data.eAbsBearing - r.getRadarHeadingRadians();
+		System.out.println(e.getBearingRadians() + r.getHeadingRadians() +"/"+ Data.eAbsBearing);
+		//double turn = eAbsBearing - r.getRadarHeadingRadians();
 		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(turn));
 	}
-
+	*/
+	
 	/*
 	 * Melee Radar. Sweeps to oldest target
 	 */
+	/*
 	public void sweepRadar(ScannedRobotEvent e) {
 		if (eMap.size() == r.getOthers()) {
 			Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
@@ -114,7 +128,9 @@ public class Radar extends Data {
 	}
 
 	public static double getRadarDir() {
-		return radarDir;
+		Point2D.Double source = new Point2D.Double(r.getX(), r.getY());
+		Point2D.Double target = new Point2D.Double(r.getBattleFieldWidth() / 2, r.getBattleFieldHeight() / 2);
+		return Utils.normalRelativeAngle(MyUtils.getAbsBearing(source, target) - r.getRadarHeadingRadians());
 	}
-
+	 */
 }

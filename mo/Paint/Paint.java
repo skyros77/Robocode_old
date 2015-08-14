@@ -13,6 +13,7 @@ import mo.Data.Radar;
 
 public class Paint {
 
+	/*
 	// VARIABLES
 	private static AdvancedRobot r;
 	private static Graphics2D g;
@@ -22,6 +23,7 @@ public class Paint {
 		r = robot;
 	}
 
+	
 	// METHODS
 	public void update(Graphics2D gfx) {
 		g = gfx;	
@@ -50,4 +52,5 @@ public class Paint {
 			//System.out.println("paintPredictions: " +e);
 		}
 	}
+	 */
 }

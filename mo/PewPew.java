@@ -14,8 +14,10 @@ public class PewPew extends AdvancedRobot {
 		setAdjustRadarForGunTurn(true);
 		setAdjustRadarForRobotTurn(true);
 		data = new Data(this);
-		while (true)
-			turnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
+		while (true) {
+			//turnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
+			turnRadarRightRadians(Double.POSITIVE_INFINITY);			
+		}
 	}
 
 	public void onScannedRobot(ScannedRobotEvent e) {
