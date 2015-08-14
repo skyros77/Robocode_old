@@ -10,17 +10,18 @@ import mo.Utils.MyUtils;
 import robocode.*;
 import robocode.util.Utils;
 
-public class Gun {
+public class Gun extends Radar{
 
 	// VARIABLES
 	private static AdvancedRobot r;
-	private static Point2D.Double ePos;
 	private static Point2D.Double rPos;
+	private static Point2D.Double ePos;
+	private static double rGunHeading;	
+	private static double eVelocity;
+	private static double eHeading;	
 	private static double firePower = 0;
 	private static double fireSpeed = Rules.getBulletSpeed(firePower);
 	private static double pHeading;
-	private static double absBearing;
-	private static double diff;
 
 	private static List<Point2D.Double> predictions = new ArrayList<Point2D.Double>();
 
@@ -31,31 +32,38 @@ public class Gun {
 
 	// METHODS
 	public void update(ScannedRobotEvent e) {
+		updateVars(e);
 		doSingleTickGun(e);
 	}
 
+	// update variables
+	private void updateVars(ScannedRobotEvent e) {
+		rPos 		= get_rPos();
+		rGunHeading	= get_rGunHeading();
+		eVelocity	= get_eVelocity();
+		eHeading	= get_eHeading();		
+		ePos		= get_ePos();
+	}
+	
 	public void doSingleTickGun(ScannedRobotEvent e) {
 		/*
 		 * single tick predictive gun
 		 */
 		predictions.clear();
-		rPos = new Point2D.Double(r.getX(), r.getY());
-		ePos = MyUtils.getPos(rPos, e.getBearingRadians() + r.getHeadingRadians(), e.getDistance());
-
-		double cHeading = e.getHeadingRadians();
-		diff = cHeading - pHeading;
+		double cHeading = eHeading;
+		double diff = cHeading - pHeading;
 
 		for (int i = 0; i < rPos.distance(ePos) / fireSpeed; i++) {
 			cHeading += diff;
-			ePos = MyUtils.getPos(ePos, cHeading + diff, e.getVelocity());
+			ePos = MyUtils.getPos(ePos, cHeading + diff, eVelocity);
 			predictions.add(ePos);
 		}
 
-		pHeading = e.getHeadingRadians();
+		pHeading = eHeading;
 
 		// turn gun
-		absBearing = MyUtils.getAbsBearing(rPos, ePos);
-		r.setTurnGunRightRadians(Utils.normalRelativeAngle(absBearing - r.getGunHeadingRadians()));
+		double turn = MyUtils.getAbsBearing(rPos, ePos);
+		r.setTurnGunRightRadians(Utils.normalRelativeAngle(turn - rGunHeading));
 
 		// fire gun
 		if (r.getGunTurnRemainingRadians() < .1) {

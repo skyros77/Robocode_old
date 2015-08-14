@@ -15,8 +15,7 @@ public class PewPew extends AdvancedRobot {
 		setAdjustRadarForRobotTurn(true);
 		data = new Data(this);
 		while (true) {
-			//turnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
-			turnRadarRightRadians(Double.POSITIVE_INFINITY);			
+			turnRadarRightRadians(Radar.get_RadarDir() * Double.POSITIVE_INFINITY);			
 		}
 	}
 

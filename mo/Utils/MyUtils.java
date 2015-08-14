@@ -1,17 +1,16 @@
 package mo.Utils;
 
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
 public class MyUtils {
 
 	// print out map information
+	/*
 	public static void printMap(LinkedHashMap<String, HashMap<String, Object>> enemy) {
 		for (Entry<String, HashMap<String, Object>> cursor : enemy.entrySet()) {
 		}
 	}
+	*/
 
 	// get X/Y position of a target (normalized)
 	public static Point2D.Double getPos(double angle) {

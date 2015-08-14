@@ -13,7 +13,6 @@ public class TestBot_Strafe extends AdvancedRobot {
 	double pHeading, dir, myTurnRadius;
 	
     public void run() {
-		setColors( new Color(255, 0, 255),  new Color(255, 0, 255), new Color(255, 0, 255));
 		setAdjustGunForRobotTurn(true);
         setAdjustRadarForGunTurn(true);
 		dir = 1;		
@@ -72,9 +71,6 @@ public class TestBot_Strafe extends AdvancedRobot {
 		if (getVelocity() == 0) dir *= -1;
 	}
 	
-
-
-
 	private Point2D.Double getPos(Point2D.Double pos, double angle, double distance)
 	{
 		double x = pos.x + distance * Math.sin(angle);

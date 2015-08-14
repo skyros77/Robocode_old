@@ -11,9 +11,9 @@ import java.util.*;
 import mo.Data.Gun;
 import mo.Data.Radar;
 
-public class Paint {
+public class Paint extends Radar {
 
-	/*
+
 	// VARIABLES
 	private static AdvancedRobot r;
 	private static Graphics2D g;
@@ -29,8 +29,8 @@ public class Paint {
 		g = gfx;	
 		
 		//PAINT STUFF
-		targetPos(Radar.getRobotPos(),Radar.getRadarTarget());
-		paintPredictions();
+		//targetPos(rPos,ePos);
+		//paintPredictions();
 		
 		
 	}
@@ -52,5 +52,4 @@ public class Paint {
 			//System.out.println("paintPredictions: " +e);
 		}
 	}
-	 */
 }
