@@ -1,5 +1,4 @@
-/* 
- * TO DO
+/* TODO
  * Figure out optimal target to shoot
  * For Melee battles target lock my opponent but occasionally sweep the field
  */
@@ -11,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
+import mo.Paint.Paint;
 import mo.Utils.*;
 import robocode.AdvancedRobot;
 import robocode.RobotDeathEvent;
@@ -23,8 +23,10 @@ public class Radar extends Data {
 	private static AdvancedRobot r;
 	private static Point2D.Double rPos;
 	private static double rRadarHeading;
+	private static double rRadarDir;
 	private static double rHeading;
 	private static double rGunHeading;
+	private static double rVelocity;
 	private static int rNum;
 	private static Point2D.Double ePos;
 	private static String eName;
@@ -36,8 +38,8 @@ public class Radar extends Data {
 	private static double eDistance;
 	private static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
 
-	private static double rRadarDir;
-
+	private static Point2D.Double field;
+	private static Point2D.Double centre;
 	// CONSTRUCTOR
 	public Radar() {
 	}
@@ -51,8 +53,10 @@ public class Radar extends Data {
 		updateVars(e);
 		updateMap();
 
-		if (rNum == 1) lockRadar(e);
-		else sweepRadar(e);
+		if (rNum == 1) 
+			lockRadar();
+		else 
+			sweepRadar();
 
 	}
 
@@ -68,6 +72,7 @@ public class Radar extends Data {
 		set_rHeading(r.getHeadingRadians());
 		set_rRadarHeading(r.getRadarHeadingRadians());
 		set_rGunHeading(r.getGunHeadingRadians());
+		set_rVelocity(r.getVelocity());
 		set_eName(e.getName());
 		set_eEnergy(e.getEnergy());
 		set_eVelocity(e.getVelocity());
@@ -77,6 +82,9 @@ public class Radar extends Data {
 		set_eHeading(e.getHeadingRadians());
 		set_ePos(MyUtils.getPos(rPos, eAbsBearing, eDistance));
 		set_rRadarDir(get_RadarDir(rPos, ePos));
+		
+		set_field(new Point2D.Double(r.getBattleFieldWidth(),r.getBattleFieldHeight()));
+		set_centre(new Point2D.Double(r.getBattleFieldWidth()/2,r.getBattleFieldHeight()/2));
 	}
 
 	// save enemy information
@@ -91,20 +99,22 @@ public class Radar extends Data {
 	/*
 	 * single target radar lock
 	 */
-	public void lockRadar(ScannedRobotEvent e) {
+	public void lockRadar() {
 		rRadarDir = Utils.normalRelativeAngle(eAbsBearing - rRadarHeading);
 		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(rRadarDir));
+		//Paint.targetPos(ePos);
 	}
 
 	/*
 	 * Melee Radar. Sweeps to oldest target
 	 */
-	public void sweepRadar(ScannedRobotEvent e) {
+	public void sweepRadar() {
 		if (eMap.size() == rNum) {
 			Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
 			eAbsBearing = (Double) map.getValue().get("absBearing");
 			rRadarDir = Utils.normalRelativeAngle(eAbsBearing - rRadarHeading);
 			r.setTurnRadarRightRadians(rRadarDir * Double.POSITIVE_INFINITY);
+			//Paint.targetPos(ePos);
 		}
 	}
 
@@ -229,5 +239,28 @@ public class Radar extends Data {
 
 	public static void set_rGunHeading(double rGunHeading) {
 		Radar.rGunHeading = rGunHeading;
+	}
+	
+	public static double get_rVelocity() {
+		return rVelocity;
+	}
+
+	public static void set_rVelocity(double rVelocity) {
+		Radar.rVelocity = rVelocity;
+	}
+	
+	public static Point2D.Double get_field() {
+		return field;
+	}
+
+	public static void set_field(Point2D.Double field) {
+		Radar.field = field;
+	}
+	public static Point2D.Double get_centre() {
+		return centre;
+	}
+
+	public static void set_centre(Point2D.Double centre) {
+		Radar.centre = centre;
 	}
 }

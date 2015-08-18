@@ -32,8 +32,8 @@ public class TestBot_Strafe extends AdvancedRobot {
 		enemyPos = getPos(myPos,e.getBearingRadians() + getHeadingRadians(),e.getDistance());
 		//double enemyDir = Utils.normalRelativeAngle(absBearing(myPos,enemyPos)-getHeadingRadians());
 		myTurnRadius = getVelocity() / ((10-0.75*getVelocity())/(180/Math.PI));
-		double distance = 200/e.getDistance() < 1 ? 0.2 : -0.2;		
-		double firePower = Math.min(600/e.getDistance(), 0.01);
+		double distance = 250/e.getDistance() < 1 ? 0.2 : -0.2;		
+		double firePower = Math.min(600/e.getDistance(), 1);
 		double fireSpeed = 20-firePower*3;	
 		double cHeading = e.getHeadingRadians();
 		double delta = cHeading-pHeading;

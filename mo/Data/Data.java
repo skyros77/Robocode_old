@@ -17,10 +17,11 @@ public class Data {
 	public Data() {}
 	
 	public Data(AdvancedRobot robot) {
-		r 		= robot;
+		r 	= robot;
 		radar 	= new Radar(r);
 		gun 	= new Gun(r);
 		move 	= new Move(r);
+		paint 	= new Paint();
 	}
 
 	// METHODS

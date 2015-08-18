@@ -30,4 +30,8 @@ public class PewPew extends AdvancedRobot {
 	public void onPaint(Graphics2D g) {
 		data.update(g);
 	}
+	
+	public void onHitWall(HitWallEvent event) {
+		System.out.println("HIT WALL... BOO");
+	}
 }

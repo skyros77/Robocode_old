@@ -1,3 +1,7 @@
+/* TODO
+ * 
+ */
+
 package mo.Data;
 
 import java.awt.geom.Point2D;
@@ -5,6 +9,7 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
+import mo.Paint.Paint;
 import mo.Utils.MyUtils;
 
 import robocode.*;
@@ -19,10 +24,9 @@ public class Gun extends Radar{
 	private static double rGunHeading;	
 	private static double eVelocity;
 	private static double eHeading;	
-	private static double firePower = 0;
+	private static double firePower = 1;
 	private static double fireSpeed = Rules.getBulletSpeed(firePower);
 	private static double pHeading;
-
 	private static List<Point2D.Double> predictions = new ArrayList<Point2D.Double>();
 
 	// CONSTRUCTORS
@@ -69,10 +73,13 @@ public class Gun extends Radar{
 		if (r.getGunTurnRemainingRadians() < .1) {
 			r.setFire(firePower);
 		}
+		
+		//Paint Debug
+		Paint.predictions(predictions);
 	}
 
 	// ACCESSORS
-	public static List<Double> getPredictions() {
+	public static List<Double> get_Predictions() {
 		return predictions;
 	}
 }
