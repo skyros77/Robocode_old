@@ -1,5 +1,4 @@
 package TestBots.Utils;
-
 import java.awt.geom.Point2D;
 
 public class GravPoint {
@@ -12,13 +11,15 @@ public class GravPoint {
 	public GravPoint() {
 	}
 
-	public GravPoint(Point2D.Double p, double d, double w) {
-		this.setPos(p);
-		this.setDist(d);
-		this.setWeight(w);
+	public GravPoint(Point2D.Double pos, double distance, double weight) {
+		this.setPos(pos);
+		this.setDist(distance);
+		this.setWeight(weight);
 	}
 	//METHODS
 
+	
+	//ACCESSORS
 	public Point2D.Double getPos() {
 		return pos;
 	}
@@ -42,10 +43,4 @@ public class GravPoint {
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-	
-	//ACCESSORS
-	
-	
-	
-
 }

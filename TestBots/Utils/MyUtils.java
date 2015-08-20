@@ -14,5 +14,12 @@ public class MyUtils {
 		return Math.atan2(target.x - source.x, target.y - source.y);
 	}
 	
+	// get X/Y position of a target
+	public static Point2D.Double getPos(Point2D.Double pos, double angle, double distance) {
+		double x = pos.x + distance * Math.sin(angle);
+		double y = pos.y + distance * Math.cos(angle);
+		return new Point2D.Double(x, y);
+	}
+	
 	//ACCESSORS
 }
