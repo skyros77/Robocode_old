@@ -8,7 +8,7 @@ import java.util.*;
 
 import mo.Data.*;
 
-public class Paint extends Radar {
+public class Paint{
 
 	// VARIABLES
 	private static Graphics2D g;
