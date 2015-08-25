@@ -42,14 +42,14 @@ public class Move extends Data {
 
 	private void doMove() {
 		// set random direction - TEMP
-		if (r.getTime() % MyUtils.randomNum(5, 30) == 0) dir *= -1;
+		if (r.getTime() % BotUtils.randomNum(5, 30) == 0) dir *= -1;
 		// if (r.getTime() % 30 == 0) dir *= -1;
 
 		/*
 		 * turn bot perpendicular to target using shortest distance possible adjust turn angle to compensate for optimal distance
 		 */
 
-		double range = MyUtils.clampRange(MyUtils.normalizeRange(eDistance, dist, dist + 100), -.1, 1);
+		double range = BotUtils.clampRange(BotUtils.normalizeRange(eDistance, dist, dist + 100), -.1, 1);
 		angle = Utils.normalRelativeAngle(eAbsBearing - rHeading);
 		turn = angle < 0 ? angle + (Math.PI / 2) - (range * dir) : angle - (Math.PI / 2) + (range * dir);
 		// r.setAhead(100 * dir);
@@ -63,8 +63,8 @@ public class Move extends Data {
 
 		rVelocity = Math.abs(rVelocity);
 		double rad = (rVelocity / ((10 - 0.75 * rVelocity) / (180 / Math.PI)));
-		Point2D.Double feeler = MyUtils.getPos(rPos, rHeading, (rad * dir));
-		Point2D.Double pivot = (angle > 0) ? MyUtils.getPos(rPos, rHeading + Math.PI / 2 * dir, (rad * dir)) : MyUtils.getPos(rPos, rHeading - Math.PI / 2 * dir, (rad * dir));
+		Point2D.Double feeler = BotUtils.getPos(rPos, rHeading, (rad * dir));
+		Point2D.Double pivot = (angle > 0) ? BotUtils.getPos(rPos, rHeading + Math.PI / 2 * dir, (rad * dir)) : BotUtils.getPos(rPos, rHeading - Math.PI / 2 * dir, (rad * dir));
 		Rectangle2D.Double bbox = new Rectangle2D.Double(pivot.x - Math.abs(rad * dir), pivot.y - Math.abs(rad * dir), Math.abs(rad * dir) * 2, Math.abs(rad * dir) * 2);
 		rVelocity = (!field.contains(feeler) && !field.contains(bbox)) ? 8-rVelocity+1 : 8; // if collision imminent reduce speed
 		//rVelocity = (!field.contains(bbox) && !field.contains(feeler)) ? 8 : 8; // if collision imminent reduce speed

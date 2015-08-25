@@ -64,7 +64,7 @@ public class Radar extends Data {
 	}
 
 	public static void setRadarDir(Point2D.Double source, Point2D.Double target) {
-		radarDir = Utils.normalRelativeAngle(MyUtils.getAbsBearing(source, target) - rRadarHeading);
+		radarDir = Utils.normalRelativeAngle(BotUtils.getAbsBearing(source, target) - rRadarHeading);
 	}
 
 	public static double getRadarDir() {

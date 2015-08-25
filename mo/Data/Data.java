@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import mo.Paint.*;
-import mo.Utils.MyUtils;
+import mo.Utils.BotUtils;
+
 import robocode.*;
 
 public class Data {
@@ -103,7 +104,7 @@ public class Data {
 		eDistance = e.getDistance();
 		eAbsBearing = e.getBearingRadians() + r.getHeadingRadians();
 		eHeading = e.getHeadingRadians();
-		ePos = MyUtils.getPos(new Point2D.Double(r.getX(), r.getY()), eAbsBearing, eDistance);
+		ePos = BotUtils.getPos(new Point2D.Double(r.getX(), r.getY()), eAbsBearing, eDistance);
 		eScore = setScore();
 	}
 
@@ -113,7 +114,7 @@ public class Data {
 		//target energy level
 		score = Math.pow(1-(eEnergy/100),0.2);
 		//target distance
-		score += MyUtils.clampRange(1-MyUtils.normalizeRange(eDistance, 150, 400),0,1);
+		score += BotUtils.clampRange(1-BotUtils.normalizeRange(eDistance, 150, 400),0,1);
 		System.out.println(score);
 		return score;
 	}

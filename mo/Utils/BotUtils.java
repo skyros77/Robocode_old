@@ -2,7 +2,7 @@ package mo.Utils;
 
 import java.awt.geom.Point2D;
 
-public class MyUtils {
+public class BotUtils {
 
 	// print out map information
 	/*
