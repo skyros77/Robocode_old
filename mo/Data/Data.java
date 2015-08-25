@@ -109,8 +109,11 @@ public class Data {
 
 	// calculate target probability
 	public double setScore() {
-		double score = Math.pow(1-(eEnergy/100),0.5);
-		score += Math.pow(MyUtils.clampRange(1-MyUtils.normalizeRange(eDistance, 200, 500),0,1),2);
+		double score = 0;
+		//target energy level
+		score = Math.pow(1-(eEnergy/100),0.2);
+		//target distance
+		score += MyUtils.clampRange(1-MyUtils.normalizeRange(eDistance, 150, 400),0,1);
 		System.out.println(score);
 		return score;
 	}
