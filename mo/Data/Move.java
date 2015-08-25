@@ -16,41 +16,29 @@ import robocode.AdvancedRobot;
 import robocode.ScannedRobotEvent;
 import robocode.util.Utils;
 
-public class Move extends Radar {
+public class Move extends Data {
 
 	// VARIABLES
-	private static AdvancedRobot r;
-	private static Point2D.Double rPos;
-	private static double rHeading;
-	private static double rVelocity;
-	private static double eDistance;
-	private static double eAbsBearing;
-	private static double dist;
+	//private static AdvancedRobot r;
 	private static double turn;
-	private static int dir;
 	private static double angle;
+	private static double dist = 200; //optimal target distance
+	
+	private static int dir = 1; //direction of travel
+	private static int buffer = 18; //wall buffer
 
 	// CONSTRUCTORS
 	public Move(AdvancedRobot robot) {
-		r = robot;
-		dist = 200; // optimal distance from target
-		dir = 1; // direction of travel
+		//r = get_robot();
 	}
 
 	// METHODS
 	public void update(ScannedRobotEvent e) {
-		updateVars();
 		doMove();
 		wallSmooth();
 	}
 
-	private void updateVars() {
-		rPos = get_rPos();
-		rHeading = get_rHeading();
-		rVelocity = get_rVelocity();
-		eDistance = get_eDistance();
-		eAbsBearing = get_eAbsBearing();
-	}
+
 
 	private void doMove() {
 		// set random direction - TEMP
@@ -71,8 +59,7 @@ public class Move extends Radar {
 
 	private void wallSmooth() {
 
-		double buffer = 18;
-		Rectangle2D.Double field = new Rectangle2D.Double(buffer, buffer, r.getBattleFieldWidth() - buffer * 2, r.getBattleFieldHeight() - buffer * 2);
+		//Rectangle2D.Double field = new Rectangle2D.Double(buffer, buffer, field - buffer * 2, r.getBattleFieldHeight() - buffer * 2);
 
 		rVelocity = Math.abs(rVelocity);
 		double rad = (rVelocity / ((10 - 0.75 * rVelocity) / (180 / Math.PI)));
@@ -93,9 +80,13 @@ public class Move extends Radar {
 		r.setAhead(100 * dir);
 		r.setTurnRightRadians(turn);
 
+		
+		//debug
+		/*
 		Paint.line(rPos, feeler);
 		Paint.oval(pivot, Math.abs(rad * 2));
 		Paint.rectangle(bbox);
 		Paint.rectangle(field);
+		*/
 	}
 }

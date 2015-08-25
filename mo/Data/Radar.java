@@ -20,50 +20,54 @@ import robocode.util.Utils;
 public class Radar extends Data {
 
 	// VARIABLES
-	private static AdvancedRobot r = get_robot();
 	private static double radarDir = 1;
 
 	// CONSTRUCTOR
 	public Radar() {
-		set_radarDir();
+		setRadarDir();
 	}
 
 	// METHODS
 	public void update() {
-		if (get_rNum() == 1) lockRadar();
-		else sweepRadar();
-	}
-
-	// Single target radar lock
-	public void lockRadar() {
-		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(get_eAbsBearing() - get_rRadarHeading()));
-		// Paint.targetPos(ePos);
-	}
-
-	// Melee radar. Sweeps to oldest target
-	public void sweepRadar() {
-		if (get_eMap().size() == get_rNum()) {
-			Entry<String, HashMap<String, Object>> map = get_eMap().entrySet().iterator().next();
-			double eAbsBearing = (Double) map.getValue().get("absBearing");
-			r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - get_rRadarHeading()) * Double.POSITIVE_INFINITY);
-			// Paint.targetPos(ePos);
+		if (numBots == 1) {
+			lockRadar();
+		}
+		else {
+			if (round%30 == 0) r.turnRadarRightRadians(Math.PI*2);
+			else lockRadar();
 		}
 	}
-
-	// ACCESSORS & MUTATORS
-	public static void set_radarDir() {
-		set_radarDir(get_rPos(),get_centre());
+	
+	// Single target radar lock
+	public void lockRadar() {
+		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading));
 	}
 
-	public static void set_radarDir(double angle) {
+	// Melee radar. Sweeps to oldest target - works but disabled
+	/*
+	public void sweepRadar() {
+		if (eMap.size() == numBots) {
+			Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
+			double eAbsBearing = (Double) map.getValue().get("eAbsBearing");
+			r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading) * Double.POSITIVE_INFINITY);
+		}
+	}
+	*/
+
+	// ACCESSORS & MUTATORS
+	public static void setRadarDir() {
+		setRadarDir(rPos,centre);
+	}
+
+	public static void setRadarDir(double angle) {
 		radarDir = Utils.normalRelativeAngle(angle);
 	}
 
-	public static void set_radarDir(Point2D.Double source, Point2D.Double target) {
-		radarDir = Utils.normalRelativeAngle(MyUtils.getAbsBearing(source, target) - get_rRadarHeading());
+	public static void setRadarDir(Point2D.Double source, Point2D.Double target) {
+		radarDir = Utils.normalRelativeAngle(MyUtils.getAbsBearing(source, target) - rRadarHeading);
 	}
 
-	public static double get_radarDir() {
+	public static double getRadarDir() {
 		return radarDir;
 	}
 }

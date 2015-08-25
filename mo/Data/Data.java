@@ -2,6 +2,7 @@ package mo.Data;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -12,46 +13,53 @@ import robocode.*;
 public class Data {
 
 	// VARIABLES
-	private static Radar radar;
-	private static Gun gun;
-	private static Move move;
-	private static Paint paint;
+	protected static AdvancedRobot r;
 
-	private static AdvancedRobot r;
-	private static Point2D.Double field;
-	private static Point2D.Double centre;
-	private static Point2D.Double rPos;
-	private static double rRadarHeading;
-	private static double rHeading;
-	private static double rGunHeading;
-	private static double rVelocity;
-	private static int rNum;
+	protected static Point2D.Double rPos;
+	protected static double rRadarHeading;
+	protected static double rHeading;
+	protected static double rGunHeading;
+	protected static double rVelocity;
 
-	private static Point2D.Double ePos;
-	private static String eName;
-	private static double eEnergy;
-	private static double eVelocity;
-	private static double eBearing;
-	private static double eAbsBearing;
-	private static double eHeading;
-	private static double eDistance;
-	private static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
+	protected static Point2D.Double ePos;
+	protected static String eName;
+	protected static double eEnergy;
+	protected static double eVelocity;
+	protected static double eBearing;
+	protected static double eAbsBearing;
+	protected static double eHeading;
+	protected static double eDistance;
+	protected static double eScore;	
+	protected static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
 
+	protected static int numBots;
+	protected static long round;
+	protected static double buffer;
+	protected static Rectangle2D.Double field;
+	protected static Point2D.Double centre;
+
+	protected static Radar radar;
+	protected static Gun gun;
+	protected static Move move;
+	protected static Paint paint;
+	
 	// CONSTRUCTORS
 	public Data() {
 	}
 
+	//initialize variables
 	public Data(AdvancedRobot robot) {
-		// initialize robot variables
-		set_robot(robot);
-		set_field(new Point2D.Double(r.getBattleFieldWidth(), r.getBattleFieldHeight()));
-		set_centre(new Point2D.Double(r.getBattleFieldWidth() / 2, r.getBattleFieldHeight() / 2));
-		set_rPos(new Point2D.Double(r.getX(), r.getY()));
-		set_rRadarHeading(r.getRadarHeadingRadians());
-		set_rHeading(r.getHeadingRadians());
-		set_rGunHeading(r.getGunHeadingRadians());
-		set_rVelocity(r.getVelocity());
-		set_rNum(r.getOthers());
+		r = robot;
+		
+		buffer = 18;
+		field = new Rectangle2D.Double(buffer, buffer, r.getBattleFieldWidth()-(buffer*2), r.getBattleFieldHeight()-(buffer*2));
+		centre = new Point2D.Double(field.width/2, field.height/2);
+		
+		rPos = new Point2D.Double(r.getX(), r.getY());
+		rRadarHeading = r.getRadarHeadingRadians();
+		rHeading = r.getHeadingRadians();
+		rGunHeading = r.getGunHeadingRadians();
+		numBots = r.getOthers();
 
 		radar = new Radar();
 		gun = new Gun();
@@ -74,180 +82,46 @@ public class Data {
 	}
 
 	public void update(Graphics2D g) {
-		// paint.update(g);
+		paint.update(g);
 	}
 
 	// update variables
 	private void updateVars(ScannedRobotEvent e) {
+		round = r.getTime();
+		numBots = r.getOthers();
 
-		// my robot
-		set_rPos(new Point2D.Double(r.getX(), r.getY()));
-		set_rRadarHeading(r.getRadarHeadingRadians());
-		set_rHeading(r.getHeadingRadians());
-		set_rGunHeading(r.getGunHeadingRadians());
-		set_rVelocity(r.getVelocity());
-		set_rNum(r.getOthers());
+		rPos = new Point2D.Double(r.getX(), r.getY());
+		rRadarHeading = r.getRadarHeadingRadians();
+		rHeading = r.getHeadingRadians();
+		rGunHeading = r.getGunHeadingRadians();
+		rVelocity = r.getVelocity();
 
-		// enemy robot
-		set_eName(e.getName());
-		set_eEnergy(e.getEnergy());
-		set_eVelocity(e.getVelocity());
-		set_eBearing(e.getBearingRadians());
-		set_eDistance(e.getDistance());
-		set_eAbsBearing(e.getBearingRadians() + r.getHeadingRadians());
-		set_eHeading(e.getHeadingRadians());
-		set_ePos(MyUtils.getPos(new Point2D.Double(r.getX(), r.getY()), eAbsBearing, eDistance));
+		eName = e.getName();
+		eEnergy = e.getEnergy();
+		eVelocity = e.getVelocity();
+		eBearing = e.getBearingRadians();
+		eDistance = e.getDistance();
+		eAbsBearing = e.getBearingRadians() + r.getHeadingRadians();
+		eHeading = e.getHeadingRadians();
+		ePos = MyUtils.getPos(new Point2D.Double(r.getX(), r.getY()), eAbsBearing, eDistance);
+		eScore = setScore();
 	}
 
+	// calculate target probability
+	public double setScore() {
+		double score = Math.pow(1-(eEnergy/100),0.5);
+		score += Math.pow(MyUtils.clampRange(1-MyUtils.normalizeRange(eDistance, 200, 500),0,1),2);
+		System.out.println(score);
+		return score;
+	}
+	
 	// save enemy information
 	public void updateMap() {
 		eMap.put(eName, new HashMap<String, Object>());
-		eMap.get(eName).put("velocity", get_eVelocity());
-		eMap.get(eName).put("heading", get_eHeading());
-		eMap.get(eName).put("absBearing", get_eAbsBearing());
-		eMap.get(eName).put("pos", get_ePos());
-		eMap.get(eName).put("distance", get_eDistance());
-	}
-
-	// ACCESSORS & MUTATORS
-
-	public static AdvancedRobot get_robot() {
-		return r;
-	}
-
-	public static void set_robot(AdvancedRobot v) {
-		r = v;
-	}
-
-	public static Point2D.Double get_rPos() {
-		return rPos;
-	}
-
-	public static void set_rPos(Point2D.Double v) {
-		rPos = v;
-	}
-
-	public static double get_eBearing() {
-		return eBearing;
-	}
-
-	public static void set_eBearing(double v) {
-		eBearing = v;
-	}
-
-	public static String get_eName() {
-		return eName;
-	}
-
-	public static void set_eName(String v) {
-		eName = v;
-	}
-
-	public static double get_eEnergy() {
-		return eEnergy;
-	}
-
-	public static void set_eEnergy(double v) {
-		eEnergy = v;
-	}
-
-	public static double get_eVelocity() {
-		return eVelocity;
-	}
-
-	public static void set_eVelocity(double v) {
-		eVelocity = v;
-	}
-
-	public static double get_eDistance() {
-		return eDistance;
-	}
-
-	public static void set_eDistance(double v) {
-		eDistance = v;
-	}
-
-	public static double get_eAbsBearing() {
-		return eAbsBearing;
-	}
-
-	public static void set_eAbsBearing(double v) {
-		eAbsBearing = v;
-	}
-
-	public static Point2D.Double get_ePos() {
-		return ePos;
-	}
-
-	public static void set_ePos(Point2D.Double v) {
-		ePos = v;
-	}
-
-	public static double get_eHeading() {
-		return eHeading;
-	}
-
-	public static void set_eHeading(double v) {
-		eHeading = v;
-	}
-
-	public static LinkedHashMap<String, HashMap<String, Object>> get_eMap() {
-		return eMap;
-	}
-
-	public static Point2D.Double get_field() {
-		return field;
-	}
-
-	public static void set_field(Point2D.Double v) {
-		field = v;
-	}
-
-	public static Point2D.Double get_centre() {
-		return centre;
-	}
-
-	public static void set_centre(Point2D.Double v) {
-		centre = v;
-	}
-
-	public static double get_rRadarHeading() {
-		return rRadarHeading;
-	}
-
-	public static void set_rRadarHeading(double v) {
-		rRadarHeading = v;
-	}
-
-	public static double get_rHeading() {
-		return rHeading;
-	}
-
-	public static void set_rHeading(double v) {
-		rHeading = v;
-	}
-
-	public static double get_rGunHeading() {
-		return rGunHeading;
-	}
-
-	public static void set_rGunHeading(double v) {
-		rGunHeading = v;
-	}
-
-	public static double get_rVelocity() {
-		return rVelocity;
-	}
-
-	public static void set_rVelocity(double v) {
-		rVelocity = v;
-	}
-
-	public static int get_rNum() {
-		return rNum;
-	}
-
-	public static void set_rNum(int v) {
-		rNum = v;
+		eMap.get(eName).put("eVelocity", eVelocity);
+		eMap.get(eName).put("eHeading", eHeading);
+		eMap.get(eName).put("eAbsBearing", eAbsBearing);
+		eMap.get(eName).put("ePos", ePos);
+		eMap.get(eName).put("eDistance", eDistance);
 	}
 }

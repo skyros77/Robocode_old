@@ -18,16 +18,14 @@ import robocode.util.Utils;
 public class Gun extends Data {
 
 	// VARIABLES
-	private static AdvancedRobot r = get_robot();
 	private static double firePower = 1;
 	private static double fireSpeed = Rules.getBulletSpeed(firePower);
 	private static double pHeading;
+	
 	private static List<Point2D.Double> predictions = new ArrayList<Point2D.Double>();
 
 	// CONSTRUCTORS
-	public Gun() {
-		r = get_robot();
-	}
+	public Gun() {}
 
 	// METHODS
 	public void update() {
@@ -37,21 +35,21 @@ public class Gun extends Data {
 	// single tick predictive gun
 	public void doSingleTickGun() {
 		predictions.clear();
-		double cHeading = get_eHeading();
+		double cHeading = eHeading;
 		double diff = cHeading - pHeading;
-		Double tPos = get_ePos();
+		Double tPos = ePos;
 
-		for (int i = 0; i < get_rPos().distance(tPos) / fireSpeed; i++) {
+		for (int i = 0; i < rPos.distance(tPos) / fireSpeed; i++) {
 			cHeading += diff;
-			tPos = MyUtils.getPos(tPos, cHeading + diff, get_eVelocity());
+			tPos = MyUtils.getPos(tPos, cHeading + diff, eVelocity);
 			predictions.add(tPos);
 		}
 
-		pHeading = get_eHeading();
+		pHeading = eHeading;
 
 		// turn gun
-		double turn = MyUtils.getAbsBearing(get_rPos(), tPos);
-		r.setTurnGunRightRadians(Utils.normalRelativeAngle(turn - get_rGunHeading()));
+		double turn = MyUtils.getAbsBearing(rPos, tPos);
+		r.setTurnGunRightRadians(Utils.normalRelativeAngle(turn - rGunHeading));
 
 		// fire gun
 		if (r.getGunTurnRemainingRadians() < .1) {
@@ -63,7 +61,7 @@ public class Gun extends Data {
 	}
 
 	// ACCESSORS & MUTATORS
-	public static List<Double> get_Predictions() {
+	public static List<Double> getPredictions() {
 		return predictions;
 	}
 }
