@@ -16,6 +16,8 @@ public class PewPew extends AdvancedRobot {
 		data = new Data(this);
 		while (true) {
 			turnRadarRightRadians(Radar.getRadarDir() * Double.POSITIVE_INFINITY);
+			//setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
+			execute();
 		}		
 	}
 
@@ -24,11 +26,11 @@ public class PewPew extends AdvancedRobot {
 	}
 
 	public void onRobotDeath(RobotDeathEvent e) {
-		data.update(e);
+		//data.update(e);
 	}
 
 	public void onPaint(Graphics2D g) {
-		data.update(g);
+		//data.update(g);
 	}
 	
 	public void onHitWall(HitWallEvent event) {

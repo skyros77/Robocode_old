@@ -6,8 +6,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import mo.Paint.*;
-import mo.Utils.BotUtils;
+import mo.Utils.*;
 
 import robocode.*;
 
@@ -31,7 +30,7 @@ public class Data {
 	protected static double eHeading;
 	protected static double eDistance;
 	protected static double eScore;	
-	protected static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(4, 0.75f, true);
+	protected static LinkedHashMap<String, HashMap<String, Object>> eMap = new LinkedHashMap<String, HashMap<String, Object>>(6, 2, true);
 
 	protected static int numBots;
 	protected static long round;
@@ -71,11 +70,11 @@ public class Data {
 	// METHODS
 	public void update(ScannedRobotEvent e) {
 		updateVars(e);
-		updateMap();
+		//updateMap();
 
 		radar.update();
-		gun.update();
-		move.update(e);
+		//gun.update();
+		//move.update(e);
 	}
 
 	public void update(RobotDeathEvent e) {
@@ -106,6 +105,15 @@ public class Data {
 		eHeading = e.getHeadingRadians();
 		ePos = BotUtils.getPos(new Point2D.Double(r.getX(), r.getY()), eAbsBearing, eDistance);
 		eScore = setScore();
+		
+		//add enemy information to LinkedHashMap
+		eMap.put(eName, new HashMap<String, Object>());
+		eMap.get(eName).put("eVelocity", eVelocity);
+		eMap.get(eName).put("eHeading", eHeading);
+		eMap.get(eName).put("eAbsBearing", eAbsBearing);
+		eMap.get(eName).put("ePos", ePos);
+		eMap.get(eName).put("eDistance", eDistance);
+		eMap.get(eName).put("eScore", eScore);
 	}
 
 	// calculate target probability
@@ -115,17 +123,7 @@ public class Data {
 		score = Math.pow(1-(eEnergy/100),0.2);
 		//target distance
 		score += BotUtils.clampRange(1-BotUtils.normalizeRange(eDistance, 150, 400),0,1);
-		System.out.println(score);
+		//System.out.println(score);
 		return score;
-	}
-	
-	// save enemy information
-	public void updateMap() {
-		eMap.put(eName, new HashMap<String, Object>());
-		eMap.get(eName).put("eVelocity", eVelocity);
-		eMap.get(eName).put("eHeading", eHeading);
-		eMap.get(eName).put("eAbsBearing", eAbsBearing);
-		eMap.get(eName).put("ePos", ePos);
-		eMap.get(eName).put("eDistance", eDistance);
 	}
 }

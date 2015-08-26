@@ -10,11 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import mo.Paint.Paint;
 import mo.Utils.*;
-import robocode.AdvancedRobot;
-import robocode.RobotDeathEvent;
-import robocode.ScannedRobotEvent;
 import robocode.util.Utils;
 
 public class Radar extends Data {
@@ -33,18 +29,37 @@ public class Radar extends Data {
 			lockRadar();
 		}
 		else {
-			if (round%30 == 0) r.turnRadarRightRadians(Math.PI*2);
+			sweepRadar();
+			/*
+			if (round % 30 == 0) r.setTurnRadarRightRadians(Math.PI * 2);
 			else lockRadar();
+			*/
 		}
 	}
-	
+
 	// Single target radar lock
 	public void lockRadar() {
 		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading));
 	}
 
-	// Melee radar. Sweeps to oldest target - works but disabled
+	//sweep radar and calculate optimal target
+	public void sweepRadar() {	
+		double highScore = 0;
+		String target = null;
+		//if (round % 30 == 0) r.setTurnRadarRightRadians(Math.PI * 2);
+		for (Entry<String, HashMap<String, Object>> entry : eMap.entrySet()) {
+			double eScore = (Double) entry.getValue().get("eScore");
+			if (eScore > highScore) {
+				highScore = eScore;
+				target = (String) entry.getKey();
+			}
+		}
+		System.out.println(target +"/"+ highScore);
+	}
+	
+	
 	/*
+	// Melee radar. Sweeps to oldest target - works but disabled
 	public void sweepRadar() {
 		if (eMap.size() == numBots) {
 			Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
@@ -56,7 +71,7 @@ public class Radar extends Data {
 
 	// ACCESSORS & MUTATORS
 	public static void setRadarDir() {
-		setRadarDir(rPos,centre);
+		setRadarDir(rPos, centre);
 	}
 
 	public static void setRadarDir(double angle) {

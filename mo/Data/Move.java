@@ -10,7 +10,6 @@ package mo.Data;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import mo.Paint.*;
 import mo.Utils.*;
 import robocode.AdvancedRobot;
 import robocode.ScannedRobotEvent;

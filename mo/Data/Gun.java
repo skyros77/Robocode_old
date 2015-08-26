@@ -9,8 +9,7 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
-import mo.Paint.Paint;
-import mo.Utils.BotUtils;
+import mo.Utils.*;
 
 import robocode.Rules;
 import robocode.util.Utils;

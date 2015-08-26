@@ -1,4 +1,4 @@
-package mo.Paint;
+package mo.Utils;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,9 +6,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
 
-import mo.Data.*;
-
-public class Paint{
+public class Paint {
 
 	// VARIABLES
 	private static Graphics2D g;
