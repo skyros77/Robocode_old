@@ -17,6 +17,8 @@ public class Radar extends Data {
 
 	// VARIABLES
 	private static double radarDir = 1;
+	private static boolean sweep = true;
+	private static String target;
 
 	// CONSTRUCTOR
 	public Radar() {
@@ -25,49 +27,67 @@ public class Radar extends Data {
 
 	// METHODS
 	public void update() {
-		if (numBots == 1) {
-			lockRadar();
-		}
-		else {
+		if (eMap.size() == numBots && sweep == true)
 			sweepRadar();
-			/*
-			if (round % 30 == 0) r.setTurnRadarRightRadians(Math.PI * 2);
-			else lockRadar();
-			*/
-		}
 	}
 
 	// Single target radar lock
-	public void lockRadar() {
+	public void singleLock() {
 		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading));
 	}
 
-	//sweep radar and calculate optimal target
-	public void sweepRadar() {	
+	// calcuate and lock on to optimal target
+	public void lockRadar2() {
 		double highScore = 0;
-		String target = null;
-		//if (round % 30 == 0) r.setTurnRadarRightRadians(Math.PI * 2);
+		double eAbsBearing = 0;
 		for (Entry<String, HashMap<String, Object>> entry : eMap.entrySet()) {
 			double eScore = (Double) entry.getValue().get("eScore");
-			if (eScore > highScore) {
+			if (eScore >= highScore) {
 				highScore = eScore;
-				target = (String) entry.getKey();
+				eAbsBearing = (Double) entry.getValue().get("eAbsBearing");
 			}
 		}
-		System.out.println(target +"/"+ highScore);
+		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading));
+		if (round % 30 == 0 && numBots > 1) sweep = true;
 	}
-	
-	
-	/*
-	// Melee radar. Sweeps to oldest target - works but disabled
+
+	public void sweepRadar2() {
+		Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
+		double b = (Double) map.getValue().get("eAbsBearing");
+		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(b - rRadarHeading) * Double.POSITIVE_INFINITY);
+
+		//r.turnRadarRightRadians(Math.PI*2);
+		sweep = false;
+	}
+
 	public void sweepRadar() {
-		if (eMap.size() == numBots) {
+		if (round % 30 == 0 && numBots > 1) {
+
+			//sweep = false;
 			Entry<String, HashMap<String, Object>> map = eMap.entrySet().iterator().next();
-			double eAbsBearing = (Double) map.getValue().get("eAbsBearing");
-			r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading) * Double.POSITIVE_INFINITY);
+			double b = (Double) map.getValue().get("eAbsBearing");
+			r.setTurnRadarRightRadians(Utils.normalRelativeAngle(b - rRadarHeading) * Double.POSITIVE_INFINITY);
 		}
+		
+		double highScore = 0;
+		double eAbsBearing = 0;
+		for (Entry<String, HashMap<String, Object>> entry : eMap.entrySet()) {
+			double eScore = (Double) entry.getValue().get("eScore");
+			if (eScore >= highScore) {
+				highScore = eScore;
+				eAbsBearing = (Double) entry.getValue().get("eAbsBearing");
+			}
+		}
+		r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading));
+		//if (round % 30 == 0 && numBots > 1) sweep = true;
+		
 	}
-	*/
+
+	/*
+	 * // Melee radar. Sweeps to oldest target - works but disabled public void sweepRadar() { if (eMap.size() == numBots) { Entry<String, HashMap<String, Object>> map =
+	 * eMap.entrySet().iterator().next(); double eAbsBearing = (Double) map.getValue().get("eAbsBearing"); r.setTurnRadarRightRadians(Utils.normalRelativeAngle(eAbsBearing - rRadarHeading) *
+	 * Double.POSITIVE_INFINITY); } }
+	 */
 
 	// ACCESSORS & MUTATORS
 	public static void setRadarDir() {
